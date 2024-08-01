@@ -1,15 +1,10 @@
-package main.model.entities;
+package com.fitGym.backend.model.entities;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 public class Routine {
@@ -22,36 +17,73 @@ public class Routine {
     private Set<DailyRoutine> dailyRoutines = new HashSet<>();
     private Set<RoutineUser> routineUsers = new HashSet<>();
 
-    @id
-    @GeneratedValue(stategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
-    public String getName() {}
-    public void setName(String name) {}
-    public String getDescription() {}
-    public void setDescription(String description) {}
-    public String getType() {}
-    public void setType(String type) {}
-    public Date getStartDate() {}
-    public void setStartDate(Date startDate) {}
-    public Date getEndDate() {}
-    public void setEndDate(Date endDate) {}
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
     @OneToMany(mappedBy = "dailyRoutine")
     public Set<DailyRoutine> getDailyRoutines() {
         return dailyRoutines;
     }
+
     public void setDailyRoutines(Set<DailyRoutine> dailyRoutines) {
         this.dailyRoutines = dailyRoutines;
     }
+
     @OneToMany(mappedBy = "routineUser")
     public Set<RoutineUser> getRoutineUsers() {
         return routineUsers;
     }
+
     public void setRoutineUsers(Set<RoutineUser> routineUsers) {
         this.routineUsers = routineUsers;
     }
+
+}
 

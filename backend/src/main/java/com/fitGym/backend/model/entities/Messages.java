@@ -1,11 +1,10 @@
 
-package main.model.entities;
+package com.fitGym.backend.model.entities;
+
+import jakarta.persistence.*;
 
 import java.util.Date;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
 
 //ESTO SE HARA EN UN FUTURO; NO PRIORITARIO
 @Entity
@@ -46,12 +45,17 @@ public class Messages {
     public void setDate(Date date) {
         this.date = date;
     }
+    @ManyToOne
+    @JoinColumn(name = "toUserId")
     public User getToUser() {
         return toUser;
     }
     public void setToUser(User toUser) {
         this.toUser = toUser;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "fromUserId")
     public User getFromUser() {
         return fromUser;
     }

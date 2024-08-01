@@ -1,7 +1,10 @@
-import javax.persistence.Table;
+package com.fitGym.backend.model.entities;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
 public class User {

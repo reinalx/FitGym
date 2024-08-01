@@ -1,15 +1,10 @@
-package main.model.entities;
+package com.fitGym.backend.model.entities;
 
-import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class DailyRoutine {
@@ -52,6 +47,7 @@ public class DailyRoutine {
     public void setRoutine(Routine routine) {
         this.routine = routine;
     }
+
     @OneToMany(mappedBy = "dailyRoutine")
     public Set<Workout> getWorkouts() {
         return workouts;

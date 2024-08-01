@@ -1,4 +1,4 @@
-package main.model.entities;
+package com.fitGym.backend.model.entities;
 
 import org.springframework.data.repository.CrudRepository;
 

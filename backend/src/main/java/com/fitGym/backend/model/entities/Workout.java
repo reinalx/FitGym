@@ -1,8 +1,12 @@
 
-package main.model.entities;
+package com.fitGym.backend.model.entities;
 
-import java.util.Date;
+import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
 public class Workout {
 
 	private Long id;
@@ -11,6 +15,7 @@ public class Workout {
 	private Exercise exercise;
 	private DailyRoutine dailyRoutine;
 	private Set<Sets> sets = new HashSet<>();
+
 	public Workout() {
 	}
 
