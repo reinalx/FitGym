@@ -67,7 +67,7 @@ public class Routine {
         this.endDate = endDate;
     }
 
-    @OneToMany(mappedBy = "dailyRoutine")
+    @OneToMany(mappedBy = "routine")
     public Set<DailyRoutine> getDailyRoutines() {
         return dailyRoutines;
     }
@@ -76,7 +76,7 @@ public class Routine {
         this.dailyRoutines = dailyRoutines;
     }
 
-    @OneToMany(mappedBy = "routineUser")
+    @OneToMany(mappedBy = "routine")
     public Set<RoutineUser> getRoutineUsers() {
         return routineUsers;
     }

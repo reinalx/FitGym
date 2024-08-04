@@ -11,7 +11,7 @@
 	</parent>
 
 	<groupId>com.fitGym</groupId>
-	<artifactId>fitgGmServer</artifactId>
+	<artifactId>fitgGymServer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>fitGymServer</name>

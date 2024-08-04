@@ -5,16 +5,17 @@ import jakarta.persistence.*;
 @Entity
 public class RoutineUser {
     private long id;
-    private Routine routineId;
-    private User userId;
+    private Routine routine;
+    private User user;
 
     public RoutineUser() {
     }
 
-    public RoutineUser(long id, Routine routineId, User userId) {
+    public RoutineUser(long id, Routine routine, User user) {
         this.id = id;
-        this.routineId = routineId;
-        this.userId = userId;
+        this.routine = routine;
+        this.user = user;
+
     }
 
     @Id
@@ -29,22 +30,22 @@ public class RoutineUser {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "routineId")
-    public Routine getRoutineId() {
-        return routineId;
+    public Routine getRoutine() {
+        return routine;
     }
 
-    public void setRoutineId(Routine routineId) {
-        this.routineId = routineId;
+    public void setRoutine(Routine routineId) {
+        this.routine = routineId;
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    public User getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

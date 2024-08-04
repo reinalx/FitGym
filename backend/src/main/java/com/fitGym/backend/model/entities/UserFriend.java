@@ -6,15 +6,15 @@ import jakarta.persistence.*;
 @Entity
 public class UserFriend {
     private long id;
-    private User user1Id;
-    private User user2Id;
+    private User user1;
+    private User user2;
 
     public UserFriend() {}
 
-    public UserFriend(long id, User user1Id, User user2Id) {
+    public UserFriend(long id, User user1, User user2) {
         this.id = id;
-        this.user1Id = user1Id;
-        this.user2Id = user2Id;
+        this.user1 = user1;
+        this.user2 = user2;
     }
 
     @Id
@@ -28,19 +28,19 @@ public class UserFriend {
 
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "user1Id")
-    public User getUser1Id() {
-        return user1Id;
+    public User getUser1() {
+        return user1;
     }
-    public void setUser1Id(User user1Id) {
-        this.user1Id = user1Id;
+    public void setUser1(User user1) {
+        this.user1 = user1;
     }
 
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "user2Id")
-    public User getUser2Id() {
-        return user2Id;
+    public User getUser2() {
+        return user2;
     }
-    public void setUser2Id(User user2Id) {
-        this.user2Id = user2Id;
+    public void setUser2(User user2) {
+        this.user2 = user2;
     }
 }

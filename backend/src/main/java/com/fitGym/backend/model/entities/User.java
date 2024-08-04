@@ -79,7 +79,7 @@ public class User {
         this.lastName = lastName;
     }
 
-    @OneToMany(mappedBy = "userFriend")
+    @OneToMany(mappedBy = "user1")
     public Set<UserFriend> getUserFriends() {
         return userFriends;
     }
