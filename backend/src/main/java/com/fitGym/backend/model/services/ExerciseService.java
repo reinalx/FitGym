@@ -7,7 +7,7 @@ public interface ExerciseService {
 
      Exercise findExerciseById(long id);
 
-     Block<Exercise> findExercises(long exeerciseId, String muscleTarget, String muscleGroup, int page, int size);
+     Block<Exercise> findExercises(long exerciseId, String muscleTarget, String muscleGroup, int page, int size);
 
      void addExercise(Exercise exercise);
 

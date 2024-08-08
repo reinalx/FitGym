@@ -63,6 +63,7 @@ CREATE TABLE Routine (
      type VARCHAR(60) NOT NULL,
      starDate DATETIME NOT NULL,
      endDate DATETIME NOT NULL,
+     visibility BOOLEAN NOT NULL DEFAULT TRUE,
 
      CONSTRAINT RoutinePK PRIMARY KEY (id)
 )ENGINE = InnoDB;
@@ -92,6 +93,7 @@ CREATE TABLE DailyRoutine (
 
 CREATE TABLE Workout (
     id BIGINT NOT NULL AUTO_INCREMENT,
+    targetSets INTEGER NOT NULL ,
     targetReps INTEGER NOT NULL ,
     targetKg FLOAT NOT NULL,
     exerciseId BIGINT NOT NULL,

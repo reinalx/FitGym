@@ -10,6 +10,7 @@ import java.util.Set;
 public class Workout {
 
 	private Long id;
+	private Integer targetSets;
 	private Integer targetReps;
 	private Float targetKg;
 	private Exercise exercise;

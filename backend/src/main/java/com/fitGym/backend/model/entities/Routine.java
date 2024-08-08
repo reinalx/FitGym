@@ -14,9 +14,21 @@ public class Routine {
     private String type;
     private Date startDate;
     private Date endDate;
+    private Boolean visibility;
     private Set<DailyRoutine> dailyRoutines = new HashSet<>();
     private Set<RoutineUser> routineUsers = new HashSet<>();
 
+    public Routine() {}
+
+    public Routine(Long id, String name, String description, String type, Date startDate, Date endDate, Boolean visibility) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.visibility = visibility;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
