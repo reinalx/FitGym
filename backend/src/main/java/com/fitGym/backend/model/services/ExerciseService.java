@@ -12,9 +12,10 @@ public interface ExerciseService {
 
      Block<Exercise> findExercises(long exerciseId, String name, String muscleTarget, String muscleGroup, int page, int size);
 
-     void addExercise(Exercise exercise);
+     //CAMBIAR TODO ESTO
+     void addExercise(String name, String description, String muscleTarget, String muscleGroup);
 
-     void updateExercise(Exercise exercise);
+     Exercise updateExercise(Long exerciseId, String name, String description, String muscleTarget, String muscleGroup) throws InstanceNotFoundException;
 
-     void deleteExercise(Exercise exercise);
+     void deleteExercise(Long exerciseId) throws InstanceNotFoundException;
 }

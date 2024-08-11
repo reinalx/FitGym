@@ -51,7 +51,7 @@ CREATE TABLE Exercise (
     name VARCHAR(60) NOT NULL,
     description VARCHAR(200) NOT NULL,
     muscleTarget VARCHAR(60) NOT NULL,
-    muscleSecondary VARCHAR(60) NOT NULL,
+    muscleGroup VARCHAR(60) NOT NULL,
 
     CONSTRAINT ExercisePK PRIMARY KEY (id)
 )ENGINE = InnoDB;

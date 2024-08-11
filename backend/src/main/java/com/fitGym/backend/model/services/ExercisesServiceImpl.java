@@ -39,18 +39,45 @@ public class ExercisesServiceImpl implements ExerciseService {
     }
 
     @Override
-    public void addExercise(Exercise exercise) {
+    public void addExercise(String name, String description, String muscleTarget, String muscleGroup) {
 
+        Exercise exercise = new Exercise();
+
+        exercise.setName(name);
+        exercise.setDescription(description);
+        exercise.setMuscleTarget(muscleTarget);
+        exercise.setMuscleGroup(muscleGroup);
+
+        exerciseDao.save(exercise);
     }
 
     @Override
-    public void updateExercise(Exercise exercise) {
+    public Exercise updateExercise(Long exerciseId, String name, String description, String muscleTarget, String muscleGroup) throws InstanceNotFoundException {
 
+        Optional<Exercise> exercise = exerciseDao.findById(exerciseId);
+        if(!exercise.isPresent()){
+            throw new InstanceNotFoundException("project.entities.exercise", exerciseId);
+        }
+
+        exercise.get().setName(name);
+        exercise.get().setDescription(description);
+        exercise.get().setMuscleTarget(muscleTarget);
+        exercise.get().setMuscleGroup(muscleGroup);
+
+        exerciseDao.save(exercise.get());
+
+        return exercise.get();
     }
 
     @Override
-    public void deleteExercise(Exercise exercise) {
+    public void deleteExercise(Long exerciseId) throws InstanceNotFoundException {
 
+        Optional<Exercise> exercise = exerciseDao.findById(exerciseId);
+        if(!exercise.isPresent()){
+            throw new InstanceNotFoundException("project.entities.exercise", exerciseId);
+        }
+
+        exerciseDao.delete(exercise.get());
     }
 
 
