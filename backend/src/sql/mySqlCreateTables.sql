@@ -52,8 +52,11 @@ CREATE TABLE Exercise (
     description VARCHAR(200) NOT NULL,
     muscleTarget VARCHAR(60) NOT NULL,
     muscleGroup VARCHAR(60) NOT NULL,
+    userId BIGINT,
 
-    CONSTRAINT ExercisePK PRIMARY KEY (id)
+    CONSTRAINT ExercisePK PRIMARY KEY (id),
+    CONSTRAINT ExerciseUserIdFK FOREIGN KEY(userId)
+        REFERENCES User (id)
 )ENGINE = InnoDB;
 
 CREATE TABLE Routine (
@@ -64,20 +67,13 @@ CREATE TABLE Routine (
      starDate DATETIME NOT NULL,
      endDate DATETIME NOT NULL,
      visibility BOOLEAN NOT NULL DEFAULT TRUE,
+     userId BIGINT NOT NULL,
 
-     CONSTRAINT RoutinePK PRIMARY KEY (id)
-)ENGINE = InnoDB;
-
-CREATE TABLE RoutineUser (
-    id BIGINT NOT NULL AUTO_INCREMENT,
-    routineId BIGINT NOT NULL,
-    userId BIGINT NOT NULL,
-    CONSTRAINT RoutineUserPK PRIMARY KEY (id),
-    CONSTRAINT RoutineUserRoutineIdFK FOREIGN KEY(routineId)
-        REFERENCES Routine (id),
-    CONSTRAINT RoutineUserUserIdFK FOREIGN KEY(userId)
+     CONSTRAINT RoutinePK PRIMARY KEY (id),
+     CONSTRAINT RoutineUserIdFK FOREIGN KEY(userId)
         REFERENCES User (id)
 )ENGINE = InnoDB;
+
 
 
 CREATE TABLE DailyRoutine (
@@ -107,6 +103,7 @@ CREATE TABLE Workout (
 
 CREATE TABLE Sets (
     id BIGINT NOT NULL AUTO_INCREMENT,
+    numberSet INTEGER NOT NULL DEFAULT 1,
     reps INTEGER NOT NULL,
     kg float NOT NULL ,
     workoutId BIGINT NOT NULL,

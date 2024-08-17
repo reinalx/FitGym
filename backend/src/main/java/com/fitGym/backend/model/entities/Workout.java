@@ -20,10 +20,11 @@ public class Workout {
 	public Workout() {
 	}
 
-	public Workout(Long id, Integer targetReps, Float targetKg, Exercise exercise,
+	public Workout(Long id, Integer targetSets, Integer targetReps, Float targetKg, Exercise exercise,
 			DailyRoutine dailyRoutine) {
 		super();
 		this.id = id;
+		this.targetSets = targetSets;
 		this.targetReps = targetReps;
 		this.targetKg = targetKg;
 		this.exercise = exercise;
@@ -38,6 +39,13 @@ public class Workout {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Integer getTargetSets() {
+		return targetSets;
+	}
+	public void setTargetSets(Integer targetSets) {
+		this.targetSets = targetSets;
 	}
 
 	public Integer getTargetReps() {

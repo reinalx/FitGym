@@ -10,14 +10,16 @@ import java.util.Set;
 public class User {
     public  enum RoleType {USER};
 
-    private long id;
+    private Long id;
     private String userName;
     private String email;
     private String password;
     private RoleType role;
     private String firstName;
     private String lastName;
-    private Set<UserFriend> userFriends = new HashSet<>();
+    private Set<User> userFriends = new HashSet<>();
+    private Set<Exercise> exercises = new HashSet<>();
+    private Set<Routine> routines = new HashSet<>();
 
     public User() {}
 
@@ -33,10 +35,10 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -79,12 +81,29 @@ public class User {
         this.lastName = lastName;
     }
 
+    //TODO: Poner correctamente la anotación
     @OneToMany(mappedBy = "user1")
-    public Set<UserFriend> getUserFriends() {
+    public Set<User> getUserFriends() {
         return userFriends;
     }
-    public void setUserFriends(Set<UserFriend> userFriends) {
+    public void setUserFriends(Set<User> userFriends) {
         this.userFriends = userFriends;
+    }
+
+    @OneToMany(mappedBy = "user")
+    public Set<Exercise> getExercises() {
+        return exercises;
+    }
+    public void setExercises(Set<Exercise> exercises) {
+        this.exercises = exercises;
+    }
+
+    @OneToMany(mappedBy = "user")
+    public Set<Routine> getRoutines() {
+        return routines;
+    }
+    public void setRoutines(Set<Routine> routines) {
+        this.routines = routines;
     }
 
 }

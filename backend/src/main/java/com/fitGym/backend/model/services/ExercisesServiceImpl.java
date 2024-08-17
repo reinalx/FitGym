@@ -2,7 +2,9 @@ package com.fitGym.backend.model.services;
 
 import com.fitGym.backend.model.entities.Exercise;
 import com.fitGym.backend.model.entities.ExerciseDao;
+import com.fitGym.backend.model.entities.UserDao;
 import com.fitGym.backend.model.exceptions.InstanceNotFoundException;
+import com.fitGym.backend.model.exceptions.PermissionException;
 import com.fitGym.backend.model.utils.Block;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
@@ -16,30 +18,33 @@ import java.util.Optional;
 @Transactional
 public class ExercisesServiceImpl implements ExerciseService {
 
+
+    @Autowired
+    private UserDao userDao;
     @Autowired
     private ExerciseDao exerciseDao;
+    @Autowired
+    private PermissionChecker permissionChecker;
 
     @Override
-    public Exercise findExerciseById(long id) throws InstanceNotFoundException {
+    public Exercise findExerciseById(Long userId, Long exerciseId) throws InstanceNotFoundException, PermissionException {
 
-        Optional<Exercise> exercise = exerciseDao.findById(id);
+        return permissionChecker.checkExerciseExistAndBelongToUserOrIsVisible(exerciseId, userId);
 
-        if(!exercise.isPresent()){
-            throw new InstanceNotFoundException("project.entities.exercise", id);
-        }
-
-        return exercise.get();
     }
 
+    //TODO: Añadir restricciones de permisos
     @Override
-    public Block<Exercise> findExercises(long exerciseId, String name, String muscleTarget, String muscleGroup, int page, int size) {
+    public Block<Exercise> findExercises(Long exerciseId, String name, String muscleTarget, String muscleGroup, int page, int size) {
         Slice<Exercise> exercise = exerciseDao.find(exerciseId, name, muscleTarget, muscleGroup, page, size);
 
         return new Block<>(exercise.getContent(), exercise.hasNext());
     }
 
+
+    //Esta función es para los usuarios, Futuro añadir una para admins
     @Override
-    public void addExercise(String name, String description, String muscleTarget, String muscleGroup) {
+    public Exercise addExercise(Long userId, String name, String description, String muscleTarget, String muscleGroup) throws InstanceNotFoundException {
 
         Exercise exercise = new Exercise();
 
@@ -47,37 +52,32 @@ public class ExercisesServiceImpl implements ExerciseService {
         exercise.setDescription(description);
         exercise.setMuscleTarget(muscleTarget);
         exercise.setMuscleGroup(muscleGroup);
+        exercise.setUser(permissionChecker.checkUser(userId));
 
         exerciseDao.save(exercise);
     }
 
     @Override
-    public Exercise updateExercise(Long exerciseId, String name, String description, String muscleTarget, String muscleGroup) throws InstanceNotFoundException {
+    public Exercise updateExercise(Long userId, Long exerciseId, String name, String description, String muscleTarget, String muscleGroup) throws InstanceNotFoundException, PermissionException {
 
-        Optional<Exercise> exercise = exerciseDao.findById(exerciseId);
-        if(!exercise.isPresent()){
-            throw new InstanceNotFoundException("project.entities.exercise", exerciseId);
-        }
+        Exercise exercise = permissionChecker.checkExerciseExistAndBelongToUser(exerciseId, userId);
 
-        exercise.get().setName(name);
-        exercise.get().setDescription(description);
-        exercise.get().setMuscleTarget(muscleTarget);
-        exercise.get().setMuscleGroup(muscleGroup);
+        exercise.setName(name);
+        exercise.setDescription(description);
+        exercise.setMuscleTarget(muscleTarget);
+        exercise.setMuscleGroup(muscleGroup);
 
-        exerciseDao.save(exercise.get());
-
-        return exercise.get();
+        exerciseDao.save(exercise);
+        return exercise;
     }
 
     @Override
-    public void deleteExercise(Long exerciseId) throws InstanceNotFoundException {
+    public Exercise deleteExercise(Long userId, Long exerciseId) throws InstanceNotFoundException, PermissionException {
+        Exercise exercise = permissionChecker.checkExerciseExistAndBelongToUserOrIsVisible(exerciseId, userId);
 
-        Optional<Exercise> exercise = exerciseDao.findById(exerciseId);
-        if(!exercise.isPresent()){
-            throw new InstanceNotFoundException("project.entities.exercise", exerciseId);
-        }
+        exerciseDao.delete(exercise);
 
-        exerciseDao.delete(exercise.get());
+        return exercise;
     }
 
 

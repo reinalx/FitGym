@@ -14,19 +14,20 @@ public class Exercise {
 	private String description;
     private String muscleTarget;
     private String muscleGroup;
-
+	private User user;
 
 
     public Exercise() {
     }
 
-	public Exercise(Long id, String name, String description, String muscleTarget, String muscleGroup) {
+	public Exercise(Long id, String name, String description, String muscleTarget, String muscleGroup, User user) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
         this.muscleTarget = muscleTarget;
         this.muscleGroup = muscleGroup;
+		this.user = user;
 	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,5 +70,14 @@ public class Exercise {
     public void setMuscleGroup(String muscleGroup) {
         this.muscleGroup = muscleGroup;
     }
+
+	@ManyToOne(optional = false,fetch = FetchType.LAZY)
+	@JoinColumn(name = "userId")
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 }

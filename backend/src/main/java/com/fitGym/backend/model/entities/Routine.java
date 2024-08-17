@@ -16,11 +16,11 @@ public class Routine {
     private Date endDate;
     private Boolean visibility;
     private Set<DailyRoutine> dailyRoutines = new HashSet<>();
-    private Set<RoutineUser> routineUsers = new HashSet<>();
+    private User user;
 
     public Routine() {}
 
-    public Routine(Long id, String name, String description, String type, Date startDate, Date endDate, Boolean visibility) {
+    public Routine(Long id, String name, String description, String type, Date startDate, Date endDate, Boolean visibility, User user) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -28,6 +28,7 @@ public class Routine {
         this.startDate = startDate;
         this.endDate = endDate;
         this.visibility = visibility;
+        this.user = user;
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,6 +80,12 @@ public class Routine {
         this.endDate = endDate;
     }
 
+    public Boolean isVisibility() {
+        return visibility;
+    }
+    public void setVisibility(Boolean visibility) {
+        this.visibility = visibility;
+    }
     @OneToMany(mappedBy = "routine")
     public Set<DailyRoutine> getDailyRoutines() {
         return dailyRoutines;
@@ -88,13 +95,13 @@ public class Routine {
         this.dailyRoutines = dailyRoutines;
     }
 
-    @OneToMany(mappedBy = "routine")
-    public Set<RoutineUser> getRoutineUsers() {
-        return routineUsers;
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    public User getUser() {
+        return user;
     }
-
-    public void setRoutineUsers(Set<RoutineUser> routineUsers) {
-        this.routineUsers = routineUsers;
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

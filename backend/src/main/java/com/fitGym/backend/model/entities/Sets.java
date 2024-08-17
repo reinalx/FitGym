@@ -8,16 +8,18 @@ import jakarta.persistence.*;
 public class Sets {
 
 	private Long id;
-	private Integer reps;
-	private Float kg;
+	private int numberSet;
+	private int reps;
+	private float kg;
 	private Workout workout;
 
 	public Sets() {
 	}
 
-	public Sets(Long id, Integer reps, Float kg, Workout workout) {
+	public Sets(Long id, int numberSet, int reps, float kg, Workout workout) {
 		super();
 		this.id = id;
+		this.numberSet = numberSet;
 		this.reps = reps;
 		this.kg = kg;
 		this.workout = workout;
@@ -33,19 +35,26 @@ public class Sets {
 		this.id = id;
 	}
 
-	public Integer getReps() {
+	public int getNumberSet() {
+		return numberSet;
+	}
+
+	public void setNumberSet(int numberSet) {
+		this.numberSet = numberSet;
+	}
+	public int getReps() {
 		return reps;
 	}
 
-	public void setReps(Integer reps) {
+	public void setReps(int reps) {
 		this.reps = reps;
 	}
 
-	public Float getKg() {
+	public float getKg() {
 		return kg;
 	}
 
-	public void setKg(Float kg) {
+	public void setKg(float kg) {
 		this.kg = kg;
 	}
 
