@@ -35,8 +35,8 @@ public class ExercisesServiceImpl implements ExerciseService {
 
     //TODO: Añadir restricciones de permisos
     @Override
-    public Block<Exercise> findExercises(Long exerciseId, String name, String muscleTarget, String muscleGroup, int page, int size) {
-        Slice<Exercise> exercise = exerciseDao.find(exerciseId, name, muscleTarget, muscleGroup, page, size);
+    public Block<Exercise> findExercises(Long userId, String name, String muscleTarget, String muscleGroup, int page, int size) {
+        Slice<Exercise> exercise = exerciseDao.find(userId, name, muscleTarget, muscleGroup, page, size);
 
         return new Block<>(exercise.getContent(), exercise.hasNext());
     }
@@ -44,7 +44,7 @@ public class ExercisesServiceImpl implements ExerciseService {
 
     //Esta función es para los usuarios, Futuro añadir una para admins
     @Override
-    public Exercise addExercise(Long userId, String name, String description, String muscleTarget, String muscleGroup) throws InstanceNotFoundException {
+    public Exercise addExercise(Long userId, String name, String description, String muscleTarget, String muscleGroup, String picture) throws InstanceNotFoundException {
 
         Exercise exercise = new Exercise();
 
@@ -53,12 +53,15 @@ public class ExercisesServiceImpl implements ExerciseService {
         exercise.setMuscleTarget(muscleTarget);
         exercise.setMuscleGroup(muscleGroup);
         exercise.setUser(permissionChecker.checkUser(userId));
+        exercise.setPicture(picture);
 
         exerciseDao.save(exercise);
+
+        return exercise;
     }
 
     @Override
-    public Exercise updateExercise(Long userId, Long exerciseId, String name, String description, String muscleTarget, String muscleGroup) throws InstanceNotFoundException, PermissionException {
+    public Exercise updateExercise(Long userId, Long exerciseId, String name, String description, String muscleTarget, String muscleGroup, String picture) throws InstanceNotFoundException, PermissionException {
 
         Exercise exercise = permissionChecker.checkExerciseExistAndBelongToUser(exerciseId, userId);
 
@@ -66,6 +69,7 @@ public class ExercisesServiceImpl implements ExerciseService {
         exercise.setDescription(description);
         exercise.setMuscleTarget(muscleTarget);
         exercise.setMuscleGroup(muscleGroup);
+        exercise.setPicture(picture);
 
         exerciseDao.save(exercise);
         return exercise;

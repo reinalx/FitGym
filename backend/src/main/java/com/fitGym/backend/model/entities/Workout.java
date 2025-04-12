@@ -4,15 +4,16 @@ package com.fitGym.backend.model.entities;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
 public class Workout {
 
 	private Long id;
-	private Integer targetSets;
-	private Integer targetReps;
-	private Float targetKg;
+	private int targetSets;
+	private int targetReps;
+	private float targetKg;
 	private Exercise exercise;
 	private DailyRoutine dailyRoutine;
 	private Set<Sets> sets = new HashSet<>();
@@ -20,10 +21,8 @@ public class Workout {
 	public Workout() {
 	}
 
-	public Workout(Long id, Integer targetSets, Integer targetReps, Float targetKg, Exercise exercise,
+	public Workout( int targetSets, int targetReps, float targetKg, Exercise exercise,
 			DailyRoutine dailyRoutine) {
-		super();
-		this.id = id;
 		this.targetSets = targetSets;
 		this.targetReps = targetReps;
 		this.targetKg = targetKg;
@@ -41,26 +40,26 @@ public class Workout {
 		this.id = id;
 	}
 
-	public Integer getTargetSets() {
+	public int getTargetSets() {
 		return targetSets;
 	}
-	public void setTargetSets(Integer targetSets) {
+	public void setTargetSets(int targetSets) {
 		this.targetSets = targetSets;
 	}
 
-	public Integer getTargetReps() {
+	public int getTargetReps() {
 		return targetReps;
 	}
 
-	public void setTargetReps(Integer targetReps) {
+	public void setTargetReps(int targetReps) {
 		this.targetReps = targetReps;
 	}
 
-	public Float getTargetKg() {
+	public float getTargetKg() {
 		return targetKg;
 	}
 
-	public void setTargetKg(Float targetKg) {
+	public void setTargetKg(float targetKg) {
 		this.targetKg = targetKg;
 	}
 
@@ -91,4 +90,25 @@ public class Workout {
 	public void setSets(Set<Sets> sets) {
 		this.sets = sets;
 	}
+
+	public void addSet(Sets set) {
+		sets.add(set);
+		set.setWorkout(this);  // Sincroniza la relación bidireccionalmente
+	}
+
+	public void removeSet(Sets set) {
+		sets.remove(set);
+		set.setWorkout(null);  // Rompe la sincronización bidireccionalmente
+	}
+
+	@Transient
+	public Optional<Sets> getSetsByNumber(int numberSet) {
+		return sets.stream().filter(sets -> sets.getNumberSet() == numberSet).findFirst();
+	}
+	@Transient
+	public int getNumberOfSets(){
+		return sets.size();
+	}
+
+
 }

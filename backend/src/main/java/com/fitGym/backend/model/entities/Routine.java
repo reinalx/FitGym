@@ -14,14 +14,13 @@ public class Routine {
     private String type;
     private Date startDate;
     private Date endDate;
-    private Boolean visibility;
+    private boolean visibility;
     private Set<DailyRoutine> dailyRoutines = new HashSet<>();
     private User user;
 
     public Routine() {}
 
-    public Routine(Long id, String name, String description, String type, Date startDate, Date endDate, Boolean visibility, User user) {
-        this.id = id;
+    public Routine(String name, String description, String type, Date startDate, Date endDate, boolean visibility, User user) {
         this.name = name;
         this.description = description;
         this.type = type;
@@ -80,10 +79,10 @@ public class Routine {
         this.endDate = endDate;
     }
 
-    public Boolean isVisibility() {
+    public boolean isVisibility() {
         return visibility;
     }
-    public void setVisibility(Boolean visibility) {
+    public void setVisibility(boolean visibility) {
         this.visibility = visibility;
     }
     @OneToMany(mappedBy = "routine")
@@ -95,6 +94,15 @@ public class Routine {
         this.dailyRoutines = dailyRoutines;
     }
 
+    public void addDailyRoutine(DailyRoutine dailyRoutine) {
+        dailyRoutines.add(dailyRoutine);
+        dailyRoutine.setRoutine(this);
+    }
+    public void removeDailyRoutine(DailyRoutine dailyRoutine) {
+        dailyRoutines.remove(dailyRoutine);
+        dailyRoutine.setRoutine(null);
+    }
+
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     public User getUser() {
@@ -103,6 +111,8 @@ public class Routine {
     public void setUser(User user) {
         this.user = user;
     }
+
+
 
 }
 

@@ -48,10 +48,11 @@ CREATE TABLE Messages (
 
 CREATE TABLE Exercise (
     id BIGINT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(60) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     description VARCHAR(200) NOT NULL,
     muscleTarget VARCHAR(60) NOT NULL,
     muscleGroup VARCHAR(60) NOT NULL,
+    picture VARCHAR(255),
     userId BIGINT,
 
     CONSTRAINT ExercisePK PRIMARY KEY (id),
@@ -64,8 +65,8 @@ CREATE TABLE Routine (
      name VARCHAR(60) NOT NULL,
      description VARCHAR(200),
      type VARCHAR(60) NOT NULL,
-     starDate DATETIME NOT NULL,
-     endDate DATETIME NOT NULL,
+     startDate DATETIME NOT NULL,
+     endDate DATETIME,
      visibility BOOLEAN NOT NULL DEFAULT TRUE,
      userId BIGINT NOT NULL,
 
@@ -80,10 +81,13 @@ CREATE TABLE DailyRoutine (
     id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR(60) NOT NULL,
     description VARCHAR(200) ,
+    day INT NOT NULL,
     routineId BIGINT NOT NULL,
     CONSTRAINT DailyRoutinePK PRIMARY KEY (id),
     CONSTRAINT DailyRoutineRoutineIdFK FOREIGN KEY(routineId)
-        REFERENCES Routine (id)
+        REFERENCES Routine (id),
+    CONSTRAINT chk_dayOfWeek CHECK (day BETWEEN 0 AND 6)  -- Validación para asegurar que dayOfWeek esté entre 1 y 7
+
 )ENGINE = InnoDB;
 
 

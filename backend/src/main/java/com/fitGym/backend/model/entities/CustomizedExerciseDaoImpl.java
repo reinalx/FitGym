@@ -26,7 +26,7 @@ public class CustomizedExerciseDaoImpl implements CustomizedExerciseDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Slice<Exercise> find(Long exerciseId, String name, String muscleTarget, String muscleGroup , int page, int size) {
+    public Slice<Exercise> find(Long userId, String name, String muscleTarget, String muscleGroup , int page, int size) {
 
         String[] nameTokens = getTokens(name);
         String[] muscleTargetTokens = getTokens(muscleTarget);
@@ -34,16 +34,16 @@ public class CustomizedExerciseDaoImpl implements CustomizedExerciseDao {
 
         String queryString = "SELECT e FROM Exercise e";
 
-        if(exerciseId != null || nameTokens.length > 0 || muscleTargetTokens.length > 0 || muscleGroupTokens.length > 0) {
+        if(userId != null || nameTokens.length > 0 || muscleTargetTokens.length > 0 || muscleGroupTokens.length > 0) {
             queryString += " WHERE ";
         }
 
-        if(exerciseId != null) {
-            queryString += " e.id = :exerciseId";
+        if(userId != null) {
+            queryString += "e.user.id = :userId";
         }
 
         if(nameTokens.length > 0) {
-            if(exerciseId != null) {
+            if(userId != null) {
                 queryString += " AND ";
             }
 
@@ -55,7 +55,7 @@ public class CustomizedExerciseDaoImpl implements CustomizedExerciseDao {
         }
 
         if(muscleTargetTokens.length > 0) {
-            if(exerciseId != null || nameTokens.length > 0) {
+            if(userId != null || nameTokens.length > 0) {
                 queryString += " AND ";
             }
             for(int i = 0; i < nameTokens.length-1; i++) {
@@ -65,7 +65,7 @@ public class CustomizedExerciseDaoImpl implements CustomizedExerciseDao {
         }
 
         if(muscleGroupTokens.length > 0) {
-            if(exerciseId != null || nameTokens.length > 0 || muscleTargetTokens.length > 0) {
+            if(userId != null || nameTokens.length > 0 || muscleTargetTokens.length > 0) {
                 queryString += " AND ";
             }
             for(int i = 0; i < nameTokens.length-1; i++) {
@@ -78,8 +78,8 @@ public class CustomizedExerciseDaoImpl implements CustomizedExerciseDao {
 
         Query query = entityManager.createQuery(queryString).setFirstResult(page*size).setMaxResults(size+1);
 
-        if (exerciseId != null) {
-            query.setParameter("exerciseId", exerciseId);
+        if (userId != null) {
+            query.setParameter("userId", userId);
         }
 
         if (nameTokens.length != 0) {

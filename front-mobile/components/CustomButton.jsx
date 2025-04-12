@@ -16,7 +16,7 @@ const CustomButton = ({
       ${containerStyles}
       ${isLoading ? 'opacity-50' : ''}`}
     >
-      <Text className={`text-primary font-psemibold text-lg ${textStyles}`}>
+      <Text className={` font-psemibold text-lg ${textStyles}`}>
         {isLoading ? <ActivityIndicator size="small" color="#FF9C01" /> : title}
       </Text>
     </TouchableOpacity>

@@ -17,20 +17,20 @@ public class User {
     private RoleType role;
     private String firstName;
     private String lastName;
-    private Set<User> userFriends = new HashSet<>();
     private Set<Exercise> exercises = new HashSet<>();
     private Set<Routine> routines = new HashSet<>();
+    //private Set<User> userFriends = new HashSet<>();
 
     public User() {}
 
-    public User(long id, String userName, String email, String password, RoleType role, String firstName, String lastName) {
-        this.id = id;
+    public User(String userName, String password, String firstName, String lastName, String email) {
+
         this.userName = userName;
-        this.email = email;
         this.password = password;
-        this.role = role;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+
     }
 
     @Id
@@ -82,13 +82,13 @@ public class User {
     }
 
     //TODO: Poner correctamente la anotación
-    @OneToMany(mappedBy = "user1")
-    public Set<User> getUserFriends() {
-        return userFriends;
-    }
-    public void setUserFriends(Set<User> userFriends) {
-        this.userFriends = userFriends;
-    }
+    //@OneToMany(mappedBy = "user1")
+    //public Set<User> getUserFriends() {
+    //    return userFriends;
+    //}
+    //public void setUserFriends(Set<User> userFriends) {
+    //    this.userFriends = userFriends;
+    //}
 
     @OneToMany(mappedBy = "user")
     public Set<Exercise> getExercises() {

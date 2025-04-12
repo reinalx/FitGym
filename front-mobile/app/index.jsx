@@ -1,15 +1,20 @@
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { View, Text, ScrollView, Image } from 'react-native'
 import * as NavigationBar from 'expo-navigation-bar'
 import { StatusBar } from 'expo-status-bar'
 import CustomButton from '../components/CustomButton'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { router } from 'expo-router'
+import { useEffect } from 'react'
+
 const App = () => {
   NavigationBar.setBackgroundColorAsync('#D21A2F')
   NavigationBar.setButtonStyleAsync('light')
   NavigationBar.setVisibilityAsync('hidden')
 
+  const insets = useSafeAreaInsets()
+
   return (
-    <SafeAreaView className=" w-full h-full">
+    <View className=" w-full h-full" style={{ paddingTop: insets.top }}>
       <ScrollView
         contentContainerStyle={{ height: '100%', backgroundColor: '#e2e8f0' }}
       >
@@ -40,7 +45,8 @@ const App = () => {
             </Text>
             <CustomButton
               title="¡Comenzar!"
-              handlePress={() => console.log('Comenzar')}
+              handlePress={() => router.push('/(auth)/signIn')
+              }
               containerStyles="bg-[#D21A2F] opacity-95 rounded-full px-4 py-2
               text-white w-96"
               textStyles="text-2xl text-slate-100 font-bold"
@@ -50,7 +56,7 @@ const App = () => {
       </ScrollView>
 
       <StatusBar backgroundColor="#D21A2F" style="light" />
-    </SafeAreaView>
+    </View>
   )
 }
 

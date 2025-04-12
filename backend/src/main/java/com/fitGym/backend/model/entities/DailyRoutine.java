@@ -1,11 +1,13 @@
 package com.fitGym.backend.model.entities;
 
 
+import com.fitGym.backend.model.utils.Day;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
+//TODO: Añadir campo para que dia es cada una de las dailies
 @Entity
 public class DailyRoutine {
     private Long id;
@@ -13,6 +15,16 @@ public class DailyRoutine {
     private String description;
     private Routine routine;
     private Set<Workout> workouts = new HashSet<>();
+    private Day day;
+
+    public DailyRoutine() {}
+
+    public DailyRoutine(String name, String description, Day day, Routine routine) {
+        this.name = name;
+        this.description = description;
+        this.routine = routine;
+        this.day = day;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,11 +60,28 @@ public class DailyRoutine {
         this.routine = routine;
     }
 
+    @Column(name = "day")
+    public Day getDay() {
+        return day;
+    }
+    public void setDay(Day day) {
+        this.day = day;
+    }
+
     @OneToMany(mappedBy = "dailyRoutine")
     public Set<Workout> getWorkouts() {
         return workouts;
     }
     public void setWorkouts(Set<Workout> workouts) {
         this.workouts = workouts;
+    }
+
+    public void addWorkout(Workout workout) {
+        workouts.add(workout);
+        workout.setDailyRoutine(this);
+    }
+    public void removeWorkout(Workout workout) {
+        workouts.remove(workout);
+        workout.setDailyRoutine(null);
     }
 }

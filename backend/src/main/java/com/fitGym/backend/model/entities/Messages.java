@@ -9,7 +9,7 @@ import java.util.Date;
 //ESTO SE HARA EN UN FUTURO; NO PRIORITARIO
 @Entity
 public class Messages {
-    public long id;
+    public Long id;
     public String msg;
     public Date date;
     public User toUser;
@@ -17,8 +17,7 @@ public class Messages {
 
     public Messages() {}
 
-    public Messages(long id, String msg, Date date, User toUser, User fromUser) {
-        this.id = id;
+    public Messages( String msg, Date date, User toUser, User fromUser) {
         this.msg = msg;
         this.date = date;
         this.toUser = toUser;
@@ -27,10 +26,10 @@ public class Messages {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getMsg() {

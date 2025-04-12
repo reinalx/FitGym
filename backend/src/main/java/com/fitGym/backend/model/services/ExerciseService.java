@@ -12,12 +12,12 @@ public interface ExerciseService {
      //TODO: ADAPTAR BUSQUEDA DE EJERCICIOS
      Exercise findExerciseById(Long userId, Long exerciseId) throws InstanceNotFoundException, PermissionException;
 
-     Block<Exercise> findExercises(Long exerciseId, String name, String muscleTarget, String muscleGroup, int page, int size);
+     Block<Exercise> findExercises(Long userId, String name, String muscleTarget, String muscleGroup, int page, int size);
 
 
-     Exercise addExercise(Long userId,String name, String description, String muscleTarget, String muscleGroup) throws InstanceNotFoundException;
+     Exercise addExercise(Long userId,String name, String description, String muscleTarget, String muscleGroup, String picture) throws InstanceNotFoundException;
 
-     Exercise updateExercise(Long userId, Long exerciseId, String name, String description, String muscleTarget, String muscleGroup) throws InstanceNotFoundException, PermissionException;
+     Exercise updateExercise(Long userId, Long exerciseId, String name, String description, String muscleTarget, String muscleGroup, String picture) throws InstanceNotFoundException, PermissionException;
 
      Exercise deleteExercise(Long userId, Long exerciseId) throws InstanceNotFoundException, PermissionException;
 }

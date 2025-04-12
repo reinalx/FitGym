@@ -47,7 +47,7 @@
 
 		<!-- Plugin versions -->
 		<surefireMavenPlugin.version>3.1.0</surefireMavenPlugin.version>
-		<sqlPlugin.version>3.0.0</sqlPlugin.version>
+		<sqlPlugin.version>1.5</sqlPlugin.version>
 
 		<!-- Package versions -->
 		<jjwt.version>0.11.5</jjwt.version>
@@ -75,8 +75,8 @@
 				<dataSource.baseUrl>jdbc:mysql://localhost/fitGym</dataSource.baseUrl>
 				<dataSource.url>${dataSource.baseUrl}?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid</dataSource.url>
 				<testDataSource.url>${dataSource.baseUrl}test?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid</testDataSource.url>
-				<dataSource.createTablesScript>mySQLCreateTables.sql</dataSource.createTablesScript>
-				<dataSource.createDataScript>mySQLCreateData.sql</dataSource.createDataScript>
+				<dataSource.createTablesScript>mySqlCreateTables.sql</dataSource.createTablesScript>
+				<dataSource.createDataScript>mySqlCreateData.sql</dataSource.createDataScript>
 			</properties>
 		</profile>
 	</profiles>

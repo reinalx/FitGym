@@ -3,8 +3,6 @@
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "sets")
-
 public class Sets {
 
 	private Long id;
@@ -16,9 +14,7 @@ public class Sets {
 	public Sets() {
 	}
 
-	public Sets(Long id, int numberSet, int reps, float kg, Workout workout) {
-		super();
-		this.id = id;
+	public Sets(int numberSet, int reps, float kg, Workout workout) {
 		this.numberSet = numberSet;
 		this.reps = reps;
 		this.kg = kg;
@@ -60,6 +56,7 @@ public class Sets {
 
 	@ManyToOne(optional = false,fetch = FetchType.LAZY)
 	@JoinColumn(name = "workoutId")
+
 	public Workout getWorkout() {
 		return workout;
 	}

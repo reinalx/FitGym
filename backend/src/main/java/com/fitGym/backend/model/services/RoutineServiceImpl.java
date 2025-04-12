@@ -2,10 +2,11 @@ package com.fitGym.backend.model.services;
 
 import com.fitGym.backend.model.entities.*;
 
-import com.fitGym.backend.model.exceptions.InstanceNotFoundException;
-import com.fitGym.backend.model.exceptions.PermissionException;
+import com.fitGym.backend.model.exceptions.*;
 import com.fitGym.backend.model.utils.Block;
+import com.fitGym.backend.model.utils.Day;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +20,6 @@ import java.util.Optional;
 public class RoutineServiceImpl implements RoutineService {
 
     @Autowired
-    private UserDao userDao;
-
-    @Autowired
     private RoutineDao routineDao;
 
     @Autowired
@@ -33,13 +31,36 @@ public class RoutineServiceImpl implements RoutineService {
     @Autowired
     private PermissionChecker permissionChecker;
 
+    private Boolean isFreeDay(Long routineId, Day day) throws InstanceNotFoundException {
+        Optional<Routine> routine = routineDao.findById(routineId);
+        if (routine.isEmpty()) {
+            throw new InstanceNotFoundException("project.entities.routine", routineId);
+        }
+        return routine.get().getDailyRoutines().stream().anyMatch(dailyRoutine -> dailyRoutine.getDay().equals(day));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+
+    //TODO: Desarrollar metodo con permisos
+    public List<Routine> findAllRoutines() {return routineDao.findAll(Sort.by(Sort.Direction.ASC, "name"));}
 
     @Override
     public List<Routine> findAllRoutinesUser(Long userId) {
 
-        List<Routine> routines = routineDao.findByUserIdOrderByName(userId);
+        return routineDao.findByUserIdOrderByName(userId);
+    }
 
-        return routines;
+    @Override
+    public List<Routine> findRoutinesByNameAndUserId(String name, Long userId) {
+        return routineDao.findByNameLikeAndUserIdOrderByName(name, userId);
+    }
+
+    //TODO: Desarrollar metodo
+    @Override
+    public Block<Routine> findRoutineByName(String name, Long userId, int page, int size) {
+
+        return new Block<>(null, false );
     }
 
 
@@ -50,8 +71,11 @@ public class RoutineServiceImpl implements RoutineService {
         return permissionChecker.checkRoutineExistAndBelongToUserOrIsVisible(routineId, userId);
     }
 
+
+
+    //TODO: Quitar parametros que no sean necesarios
     @Override
-    public Routine addNewRoutine(Long userId, String name, String description, String type, Date startDate, Date endDate, Boolean visibility) throws InstanceNotFoundException {
+    public Routine addNewRoutine(Long userId, String name, String description, String type, Date startDate, Date endDate, boolean visibility) throws InstanceNotFoundException {
         Routine routine = new Routine();
         routine.setName(name);
         routine.setDescription(description);
@@ -68,9 +92,9 @@ public class RoutineServiceImpl implements RoutineService {
     }
 
     @Override
-    public Routine updateRoutine(Long userId, Long routineId, String name, String description, String type, Date startDate, Date endDate, Boolean visibility) throws InstanceNotFoundException, PermissionException {
+    public Routine updateRoutine(Long userId, Long routineId, String name, String description, String type, Date startDate, Date endDate, boolean visibility) throws InstanceNotFoundException, PermissionException {
 
-        Routine routine = permissionChecker.checkRoutineExistAndBelongToUserOrIsVisible(routineId, userId);
+        Routine routine = permissionChecker.checkRoutineExistAndBelongToUser(routineId, userId);
 
         routine.setName(name);
         routine.setDescription(description);
@@ -88,7 +112,7 @@ public class RoutineServiceImpl implements RoutineService {
     @Override
     public Routine deleteRoutine(Long userId, Long routineId) throws InstanceNotFoundException, PermissionException {
 
-        Routine routine = permissionChecker.checkRoutineExistAndBelongToUserOrIsVisible(routineId, userId);
+        Routine routine = permissionChecker.checkRoutineExistAndBelongToUser(routineId, userId);
 
         routineDao.delete(routine);
 
@@ -100,20 +124,44 @@ public class RoutineServiceImpl implements RoutineService {
 
         Optional<DailyRoutine> dailyRoutine = dailyRoutineDao.findById(dailyRoutineId);
 
-        if (!dailyRoutine.isPresent()) {
+        if (dailyRoutine.isEmpty()) {
             throw new InstanceNotFoundException("project.entities.dailyRoutine", dailyRoutineId);
         }
         return dailyRoutine.get();
     }
 
     @Override
-    public DailyRoutine addDailyRoutineToRoutine(Long userId, Long routineId, String name, String description) throws PermissionException, InstanceNotFoundException {
+    public List<DailyRoutine> findAllDailyRoutinesFromRoutine(Long routineId) throws InstanceNotFoundException, RoutineWithoutDailyRoutineException {
+
+        Optional<Routine> routine = routineDao.findById(routineId);
+
+        if (routine.isEmpty()) {
+            throw new InstanceNotFoundException("project.entities.routine", routineId);
+        }
+        if(routine.get().getDailyRoutines().isEmpty()){
+            throw new RoutineWithoutDailyRoutineException();
+        }
+        return routine.get().getDailyRoutines().stream().toList();
+
+    }
+
+    @Override
+    public DailyRoutine addDailyRoutineToRoutine(Long userId, Long routineId, String name, String description, Day day) throws PermissionException, InstanceNotFoundException {
+
+        Routine routine = permissionChecker.checkRoutineExistAndBelongToUser(routineId, userId);
 
         DailyRoutine dailyRoutine = new DailyRoutine();
         dailyRoutine.setName(name);
         dailyRoutine.setDescription(description);
-        dailyRoutine.setRoutine(permissionChecker.checkRoutineExistAndBelongToUser(routineId, userId));
+        dailyRoutine.setRoutine(routine);
+        if(isFreeDay(routineId, day)){
+            dailyRoutine.setDay(day);
+        }else{
+            throw new DiferentDailyRoutinesSameDayException();
+        }
 
+
+        routine.addDailyRoutine(dailyRoutine);
         dailyRoutineDao.save(dailyRoutine);
 
         return dailyRoutine;
@@ -126,18 +174,26 @@ public class RoutineServiceImpl implements RoutineService {
 
         DailyRoutine dailyRoutine = permissionChecker.checkDailyRoutineExistAndBelongToUser(userId, dailyRoutineId);
 
+        Routine routine = dailyRoutine.getRoutine();
+        routine.removeDailyRoutine(dailyRoutine);
+
         dailyRoutineDao.delete(dailyRoutine);
 
         return dailyRoutine;
     }
 
     @Override
-    public DailyRoutine updateDailyRoutine(Long userId, Long dailyRoutineId, String name, String description) throws PermissionException, InstanceNotFoundException {
+    public DailyRoutine updateDailyRoutine(Long userId, Long dailyRoutineId, String name, String description, Day day) throws DiferentDailyRoutinesSameDayException, PermissionException, InstanceNotFoundException {
 
         DailyRoutine dailyRoutine = permissionChecker.checkDailyRoutineExistAndBelongToUser(userId, dailyRoutineId);
 
         dailyRoutine.setName(name);
         dailyRoutine.setDescription(description);
+        if(isFreeDay(dailyRoutine.getRoutine().getId(), day)){
+            dailyRoutine.setDay(day);
+        }else{
+            throw new DiferentDailyRoutinesSameDayException();
+        }
 
         dailyRoutineDao.save(dailyRoutine);
 
@@ -151,11 +207,25 @@ public class RoutineServiceImpl implements RoutineService {
 
         Optional<Workout> workout = workoutDao.findById(workoutId);
 
-        if (!workout.isPresent()) {
+        if (workout.isEmpty()) {
             throw new InstanceNotFoundException("project.entities.workout", workoutId);
         }
 
-        return null;
+        return workout.get();
+    }
+
+    @Override
+    public List<Workout> findAllWorkoutsFromDailyRoutine(Long dailyRoutineId) throws InstanceNotFoundException, DailyRoutineWithoutWorkoutException {
+
+        Optional<DailyRoutine> dailyRoutine = dailyRoutineDao.findById(dailyRoutineId);
+
+        if (dailyRoutine.isEmpty()) {
+            throw new InstanceNotFoundException("project.entities.dailyRoutine", dailyRoutineId);
+        }
+        if(dailyRoutine.get().getWorkouts().isEmpty()){
+            throw new DailyRoutineWithoutWorkoutException();
+        }
+        return dailyRoutine.get().getWorkouts().stream().toList();
     }
 
     @Override
@@ -170,6 +240,7 @@ public class RoutineServiceImpl implements RoutineService {
         workout.setExercise(permissionChecker.checkExerciseExistAndBelongToUserOrIsVisible(exerciseId, userId));
         workout.setDailyRoutine(dailyRoutine);
 
+        dailyRoutine.addWorkout(workout);
         workoutDao.save(workout);
 
         return workout;
@@ -180,6 +251,9 @@ public class RoutineServiceImpl implements RoutineService {
     public Workout deleteWorkoutFromDailyRoutine(Long userId, Long workoutId) throws PermissionException, InstanceNotFoundException {
 
         Workout workout = permissionChecker.checkWorkoutExistAndBelongToUser(userId, workoutId);
+
+        DailyRoutine dailyRoutine = workout.getDailyRoutine();
+        dailyRoutine.removeWorkout(workout);
 
         workoutDao.delete(workout);
 
@@ -205,14 +279,13 @@ public class RoutineServiceImpl implements RoutineService {
 
     //TODO: DESARROLLAR EN UN FUTURO
 
-    //AQUI SE BUSCAN TODAS LAS RUTINAS QUE SEAN VISIBLES Y LAS QUE SON DEL USUARIO, HABRÍA QUE MODIFICAR EL DAO
     @Override
-    public Block<Routine> findAllRoutines(int page, int size) {
-        return null;
+    public void addExistingRoutine(Long userId, Long routineId) {
+
     }
 
     @Override
-    public void addExistingRoutine(Long userId, Long routineId) {
+    public void deleteFullRoutine(Long userId, Long routineId) {
 
     }
 }

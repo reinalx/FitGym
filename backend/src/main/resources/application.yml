@@ -19,6 +19,7 @@ spring:
   devtools:
     restart:
       trigger-file: reload
+      enabled: false
     livereload:
       enabled: false
   jackson:

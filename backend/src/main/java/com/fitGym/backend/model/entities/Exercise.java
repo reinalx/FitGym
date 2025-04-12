@@ -4,8 +4,8 @@ package com.fitGym.backend.model.entities;
 
 import jakarta.persistence.*;
 
+//AÑADiR EL ATRIBUTO PICTURES
 @Entity
-@Table(name = "exercise")
 public class Exercise {
 
 
@@ -14,20 +14,19 @@ public class Exercise {
 	private String description;
     private String muscleTarget;
     private String muscleGroup;
+	private String picture;
 	private User user;
-
 
     public Exercise() {
     }
 
-	public Exercise(Long id, String name, String description, String muscleTarget, String muscleGroup, User user) {
-		super();
-		this.id = id;
+	public Exercise(String name, String description, String muscleTarget, String muscleGroup, String picture,User user) {
 		this.name = name;
 		this.description = description;
         this.muscleTarget = muscleTarget;
         this.muscleGroup = muscleGroup;
 		this.user = user;
+		this.picture = picture;
 	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,6 +69,13 @@ public class Exercise {
     public void setMuscleGroup(String muscleGroup) {
         this.muscleGroup = muscleGroup;
     }
+
+	public String getPicture() {
+		return picture;
+	}
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
 
 	@ManyToOne(optional = false,fetch = FetchType.LAZY)
 	@JoinColumn(name = "userId")
